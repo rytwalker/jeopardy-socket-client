@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Route } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import './App.css';
 import Buzzer from './components/Buzzer';
@@ -99,7 +98,7 @@ function App() {
         <Buzzer
           username={username}
           handleScoreUpdate={handleScoreUpdate}
-          handleSelected={setIsSelected}
+          handleSelected={handleSelected}
         />
       ) : (
         <Login handleLogin={handleLogin} />
