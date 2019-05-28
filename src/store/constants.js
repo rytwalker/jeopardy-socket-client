@@ -1,0 +1,10 @@
+export const ADD_USER = 'ADD_USER';
+export const ADD_USERNAME = 'ADD_USERNAME';
+export const CONNECT_USER = 'CONNECT_USER';
+export const DISCONNECT_USER = 'DISCONNECT_USER';
+export const LOGIN_USER = 'LOGIN_USER';
+export const REMOVE_MESSAGE = 'REMOVE_MESSAGE';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const SET_MESSAGE = 'SET_MESSAGE';
+export const SET_SCOREBOARD = 'SET_SCOREBOARD';
+export const UPDATE_SCORE = 'UPDATE_SCORE';

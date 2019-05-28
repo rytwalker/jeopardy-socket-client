@@ -2,15 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import PlayerSqure from './PlayerSquare';
 
-const Scoreboard = ({ isSelected, users }) => {
+const Scoreboard = ({ users }) => {
   return (
     <div style={{ margin: '0 auto' }}>
       <h1>Scoreboard</h1>
       <Container>
-        {users &&
-          users.map(user => (
-            <PlayerSqure user={user} isSelected={isSelected} />
-          ))}
+        {users && users.map(user => <PlayerSqure user={user} />)}
       </Container>
     </div>
   );

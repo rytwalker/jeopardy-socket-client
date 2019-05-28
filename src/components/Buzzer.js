@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
+import { useStateValue } from 'react-conflux';
+import { UserContext } from '../store/contexts/contexts';
 import styled from 'styled-components';
 
 const Buzzer = ({ handleScoreUpdate, handleSelected, username }) => {
+  const [state] = useStateValue(UserContext);
   const [toggle, setToggle] = useState(false);
 
   const handleBuzzerPress = () => {
-    handleSelected(true);
+    // handleSelected(true);
     setToggle(!toggle);
   };
 
+  const { currentUser } = state;
   return (
     <BuzzerContainer>
-      <h1>{username}</h1>
-      <BuzzerButton onClick={handleBuzzerPress}>{username[0]}</BuzzerButton>
+      <h1>{currentUser && currentUser.username}</h1>
+      <BuzzerButton onClick={handleBuzzerPress}>
+        {currentUser && currentUser.username[0]}
+      </BuzzerButton>
       <p>Third thing</p>
       {toggle && (
         <Modal>
           <button
-            onClick={() => handleScoreUpdate(username)}
+            onClick={() => handleScoreUpdate(currentUser)}
             className="correct-btn btn"
           >
             Correct

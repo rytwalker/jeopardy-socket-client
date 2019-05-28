@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 const Login = ({ handleLogin }) => {
   const [username, setUserName] = useState('');
+
   const handleUserNameSubmit = () => {
     handleLogin(username);
   };
+
   return (
     <div>
       <div>

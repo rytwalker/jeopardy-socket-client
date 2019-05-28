@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { StateProvider } from 'react-conflux';
+import { UserContext } from './store/contexts/contexts';
+import { userReducer } from './store/reducers/userReducer';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <StateProvider reducer={userReducer} StateContext={UserContext}>
+    <Router>
+      <App />
+    </Router>
+  </StateProvider>,
   document.getElementById('root')
 );
 

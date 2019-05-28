@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const PlayerSquare = ({ isSelected, user }) => {
+const PlayerSquare = ({ user }) => {
   return (
-    <Square selected={isSelected}>
+    <Square selected={false}>
       <h1>{user.username}</h1>
       <Score>{user.score}</Score>
       <TimerBar />
