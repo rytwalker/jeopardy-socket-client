@@ -63,6 +63,12 @@ function App() {
     });
   }, [addParticipantsMessage, userDispatch]);
 
+  useEffect(() => {
+    socket.on('score updated', id => {
+      userDispatch({ type: UPDATE_SCORE, payload: id });
+    });
+  }, [userDispatch]);
+
   const handleLogin = name => {
     socket.emit('add user', name);
     userDispatch({ type: LOGIN_USER });
@@ -75,10 +81,6 @@ function App() {
   const handleScoreUpdate = user => {
     socket.emit('update score', user);
   };
-
-  socket.on('score updated', id => {
-    userDispatch({ type: UPDATE_SCORE, payload: id });
-  });
 
   return (
     <div className="App">
