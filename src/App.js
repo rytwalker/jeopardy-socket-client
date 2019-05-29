@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import { useStateValue } from 'react-conflux';
 import { UserContext } from './store/contexts/contexts';
@@ -23,29 +23,20 @@ const socket = socketIOClient(endpoint);
 
 function App() {
   const [userState, userDispatch] = useStateValue(UserContext);
+  const { connected, loggedIn } = userState;
 
-  // useEffect(() => {
-  //   socket.on('update users', data => {
-  //     console.log(data);
-  //     setUsers([...data.users]);
-  //   });
-  // }, [users]);
-
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     socket.on('user joined', data => {
-  //       console.log(data);
-  //       console.log(data.username + ' joined');
-  //       setUsers([...data.users]);
-  //       console.log(users);
-  //       // addParticipantsMessage(data);
-  //     });
-  //   }
-  // }, [loggedIn, users]);
+  const addParticipantsMessage = useCallback(
+    data => {
+      userDispatch({
+        type: SET_MESSAGE,
+        payload: `${data.newUser.username} joined the game.`
+      });
+      setTimeout(() => userDispatch({ type: REMOVE_MESSAGE }), 3000);
+    },
+    [userDispatch]
+  );
 
   useEffect(() => {
-    const { connected, loggedIn } = userState;
-    console.log(socket);
     if (!connected) {
       if (window.innerWidth >= 500) {
         userDispatch({ type: SET_SCOREBOARD });
@@ -61,33 +52,25 @@ function App() {
         });
       }
     };
-  }, [userDispatch, userState]);
+  }, [connected, loggedIn, userDispatch]);
 
-  socket.on('user joined', data => {
-    console.log(data.newUser.username + ' joined');
-    console.log(data);
-    userDispatch({ type: ADD_USER, payload: data.newUser });
-    // setUsers([...data.users]);
-    addParticipantsMessage(data);
-  });
+  useEffect(() => {
+    socket.on('user joined', data => {
+      console.log(data.newUser.username + ' joined');
+      console.log(data);
+      userDispatch({ type: ADD_USER, payload: data.newUser });
+      addParticipantsMessage(data);
+    });
+  }, [addParticipantsMessage, userDispatch]);
 
   const handleLogin = name => {
-    userDispatch({ type: LOGIN_USER });
-
     socket.emit('add user', name);
+    userDispatch({ type: LOGIN_USER });
   };
 
   socket.on('login', data => {
     userDispatch({ type: SET_CURRENT_USER, payload: data.newUser });
   });
-
-  const addParticipantsMessage = data => {
-    userDispatch({
-      type: SET_MESSAGE,
-      payload: `${data.newUser.username} joined the game.`
-    });
-    setTimeout(() => userDispatch({ type: REMOVE_MESSAGE }), 3000);
-  };
 
   const handleScoreUpdate = user => {
     socket.emit('update score', user);
@@ -96,11 +79,6 @@ function App() {
   socket.on('score updated', id => {
     userDispatch({ type: UPDATE_SCORE, payload: id });
   });
-
-  // const handleSelected = () => {
-  //   setIsSelected(true);
-  //   // setTimeout(() => setIsSelected(false), 3000);
-  // };
 
   return (
     <div className="App">
