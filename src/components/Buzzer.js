@@ -3,16 +3,16 @@ import { useStateValue } from 'react-conflux';
 import { UserContext } from '../store/contexts/contexts';
 import styled from 'styled-components';
 
-const Buzzer = ({ handleScoreUpdate, handleSelected, username }) => {
+const Buzzer = ({ handleScoreUpdate, handleSelect, username }) => {
   const [state] = useStateValue(UserContext);
   const [toggle, setToggle] = useState(false);
+  const { currentUser } = state;
 
   const handleBuzzerPress = () => {
-    // handleSelected(true);
+    handleSelect(currentUser);
     setToggle(!toggle);
   };
 
-  const { currentUser } = state;
   return (
     <BuzzerContainer>
       <h1>{currentUser && currentUser.username}</h1>

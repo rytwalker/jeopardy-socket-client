@@ -1,9 +1,12 @@
 import React from 'react';
+import { useStateValue } from 'react-conflux';
+import { UserContext } from '../store/contexts/contexts';
 import styled from 'styled-components';
 
 const PlayerSquare = ({ user }) => {
+  const [state] = useStateValue(UserContext);
   return (
-    <Square selected={false}>
+    <Square selected={state.selectedUserId && state.selectedUserId === user.id}>
       <h1>{user.username}</h1>
       <Score>{user.score}</Score>
       <TimerBar />

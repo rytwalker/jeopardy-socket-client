@@ -11,6 +11,7 @@ import {
   SET_CURRENT_USER,
   SET_MESSAGE,
   SET_SCOREBOARD,
+  SET_SELECTED_USER,
   UPDATE_SCORE
 } from './store/constants';
 import './App.css';
@@ -69,17 +70,29 @@ function App() {
     });
   }, [userDispatch]);
 
+  useEffect(() => {
+    socket.on('login', data => {
+      userDispatch({ type: SET_CURRENT_USER, payload: data.newUser });
+    });
+  }, [userDispatch]);
+
+  useEffect(() => {
+    socket.on('selected user', id => {
+      userDispatch({ type: SET_SELECTED_USER, payload: id });
+    });
+  }, [userDispatch]);
+
   const handleLogin = name => {
     socket.emit('add user', name);
     userDispatch({ type: LOGIN_USER });
   };
 
-  socket.on('login', data => {
-    userDispatch({ type: SET_CURRENT_USER, payload: data.newUser });
-  });
-
   const handleScoreUpdate = user => {
     socket.emit('update score', user);
+  };
+
+  const handleSelect = user => {
+    socket.emit('select user', user);
   };
 
   return (
@@ -90,7 +103,7 @@ function App() {
       ) : userState.loggedIn ? (
         <Buzzer
           handleScoreUpdate={handleScoreUpdate}
-          // handleSelected={handleSelected}
+          handleSelect={handleSelect}
         />
       ) : (
         <Login handleLogin={handleLogin} />

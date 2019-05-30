@@ -7,6 +7,7 @@ import {
   SET_CURRENT_USER,
   SET_MESSAGE,
   SET_SCOREBOARD,
+  SET_SELECTED_USER,
   UPDATE_SCORE
 } from '../constants';
 
@@ -16,7 +17,8 @@ const initialState = {
   message: '',
   scoreboard: false,
   users: [],
-  currentUser: null
+  currentUser: null,
+  selectedUserId: null
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -60,6 +62,11 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         scoreboard: true
+      };
+    case SET_SELECTED_USER:
+      return {
+        ...state,
+        selectedUserId: action.payload
       };
     case UPDATE_SCORE:
       const updatedUsers = state.users.map(user => {
