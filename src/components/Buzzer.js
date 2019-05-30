@@ -3,13 +3,25 @@ import { useStateValue } from 'react-conflux';
 import { UserContext } from '../store/contexts/contexts';
 import styled from 'styled-components';
 
-const Buzzer = ({ handleScoreUpdate, handleSelect, username }) => {
+const Buzzer = ({ handleDeselect, handleScoreUpdate, handleSelect }) => {
   const [state] = useStateValue(UserContext);
   const [toggle, setToggle] = useState(false);
-  const { currentUser } = state;
+  const { currentUser, selectedUserId } = state;
 
   const handleBuzzerPress = () => {
-    handleSelect(currentUser);
+    if (!selectedUserId) {
+      handleSelect(currentUser);
+      setToggle(!toggle);
+    }
+  };
+
+  const handleCorrectClick = () => {
+    handleScoreUpdate(currentUser);
+    setToggle(!toggle);
+  };
+
+  const handleIncorrectClick = () => {
+    handleDeselect();
     setToggle(!toggle);
   };
 
@@ -22,13 +34,12 @@ const Buzzer = ({ handleScoreUpdate, handleSelect, username }) => {
       <p>Third thing</p>
       {toggle && (
         <Modal>
-          <button
-            onClick={() => handleScoreUpdate(currentUser)}
-            className="correct-btn btn"
-          >
+          <button onClick={handleCorrectClick} className="correct-btn btn">
             Correct
           </button>
-          <button className="wrong-btn btn">Wrong!</button>
+          <button onClick={handleIncorrectClick} className="wrong-btn btn">
+            Wrong!
+          </button>
         </Modal>
       )}
     </BuzzerContainer>

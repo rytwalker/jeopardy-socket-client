@@ -4,6 +4,7 @@ import {
   DISCONNECT_USER,
   LOGIN_USER,
   REMOVE_MESSAGE,
+  REMOVE_SELECTED_USER,
   SET_CURRENT_USER,
   SET_MESSAGE,
   SET_SCOREBOARD,
@@ -52,6 +53,11 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         message: ''
+      };
+    case REMOVE_SELECTED_USER:
+      return {
+        ...state,
+        selectedUserId: null
       };
     case SET_MESSAGE:
       return {

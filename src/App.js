@@ -8,6 +8,7 @@ import {
   DISCONNECT_USER,
   LOGIN_USER,
   REMOVE_MESSAGE,
+  REMOVE_SELECTED_USER,
   SET_CURRENT_USER,
   SET_MESSAGE,
   SET_SCOREBOARD,
@@ -67,6 +68,7 @@ function App() {
   useEffect(() => {
     socket.on('score updated', id => {
       userDispatch({ type: UPDATE_SCORE, payload: id });
+      userDispatch({ type: REMOVE_SELECTED_USER });
     });
   }, [userDispatch]);
 
@@ -80,6 +82,14 @@ function App() {
     socket.on('selected user', id => {
       userDispatch({ type: SET_SELECTED_USER, payload: id });
     });
+    // remove selected
+    setTimeout(() => socket.emit('deselect user'), 3000);
+  }, [userDispatch]);
+
+  useEffect(() => {
+    socket.on('deselected user', () => {
+      userDispatch({ type: REMOVE_SELECTED_USER });
+    });
   }, [userDispatch]);
 
   const handleLogin = name => {
@@ -90,6 +100,8 @@ function App() {
   const handleScoreUpdate = user => {
     socket.emit('update score', user);
   };
+
+  const handleDeselect = () => socket.emit('deselect user');
 
   const handleSelect = user => {
     socket.emit('select user', user);
@@ -104,6 +116,7 @@ function App() {
         <Buzzer
           handleScoreUpdate={handleScoreUpdate}
           handleSelect={handleSelect}
+          handleDeselect={handleDeselect}
         />
       ) : (
         <Login handleLogin={handleLogin} />
