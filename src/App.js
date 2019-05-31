@@ -16,6 +16,7 @@ import {
   UPDATE_SCORE
 } from './store/constants';
 import './App.css';
+import Alert from './components/Alert';
 import Buzzer from './components/Buzzer';
 import Login from './components/Login';
 import Landing from './components/Landing';
@@ -108,7 +109,7 @@ function App(props) {
 
   return (
     <div className="App">
-      {userState.message.length ? userState.message : null}
+      {userState.message && <Alert>{userState.message}</Alert>}
       <Switch>
         <Route exact path="/" component={Landing} />
         <Route

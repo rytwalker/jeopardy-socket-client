@@ -3,10 +3,21 @@ import { useStateValue } from 'react-conflux';
 import { UserContext } from '../store/contexts/contexts';
 import styled from 'styled-components';
 
-const Buzzer = ({ handleDeselect, handleScoreUpdate, handleSelect }) => {
+const Buzzer = ({
+  history,
+  handleDeselect,
+  handleScoreUpdate,
+  handleSelect
+}) => {
   const [state] = useStateValue(UserContext);
   const [toggle, setToggle] = useState(false);
-  const { currentUser, selectedUserId } = state;
+  const { currentUser, loggedIn, selectedUserId } = state;
+
+  useState(() => {
+    if (!loggedIn) {
+      history.push('/login');
+    }
+  }, []);
 
   const handleBuzzerPress = () => {
     if (!selectedUserId) {
