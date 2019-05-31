@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import { useStateValue } from 'react-conflux';
 import { UserContext } from './store/contexts/contexts';
@@ -18,12 +19,13 @@ import {
 import './App.css';
 import Buzzer from './components/Buzzer';
 import Login from './components/Login';
+import Landing from './components/Landing';
 import Scoreboard from './components/Scoreboard';
 
 const endpoint = 'http://127.0.0.1:5000';
 const socket = socketIOClient(endpoint);
 
-function App() {
+function App(props) {
   const [userState, userDispatch] = useStateValue(UserContext);
   const { connected, loggedIn } = userState;
 
@@ -40,9 +42,9 @@ function App() {
 
   useEffect(() => {
     if (!connected) {
-      if (window.innerWidth >= 500) {
-        userDispatch({ type: SET_SCOREBOARD });
-      }
+      // if (window.innerWidth >= 500) {
+      //   userDispatch({ type: SET_SCOREBOARD });
+      // }
       userDispatch({ type: CONNECT_USER });
     }
     return () => {
@@ -75,6 +77,7 @@ function App() {
   useEffect(() => {
     socket.on('login', data => {
       userDispatch({ type: SET_CURRENT_USER, payload: data.newUser });
+      props.history.push('/buzzer');
     });
   }, [userDispatch]);
 
@@ -110,7 +113,32 @@ function App() {
   return (
     <div className="App">
       {userState.message.length ? userState.message : null}
-      {userState.scoreboard ? (
+      <Switch>
+        <Route exact path="/" component={Landing} />
+        <Route
+          exact
+          path="/scoreboard"
+          render={props => <Scoreboard {...props} users={userState.users} />}
+        />
+        <Route
+          exact
+          path="/login"
+          render={props => <Login {...props} handleLogin={handleLogin} />}
+        />
+        <Route
+          exact
+          path="/buzzer"
+          render={props => (
+            <Buzzer
+              {...props}
+              handleScoreUpdate={handleScoreUpdate}
+              handleSelect={handleSelect}
+              handleDeselect={handleDeselect}
+            />
+          )}
+        />
+      </Switch>
+      {/* {userState.scoreboard ? (
         <Scoreboard users={userState.users} />
       ) : userState.loggedIn ? (
         <Buzzer
@@ -120,9 +148,9 @@ function App() {
         />
       ) : (
         <Login handleLogin={handleLogin} />
-      )}
+      )} */}
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
