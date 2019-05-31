@@ -12,7 +12,6 @@ import {
   REMOVE_SELECTED_USER,
   SET_CURRENT_USER,
   SET_MESSAGE,
-  SET_SCOREBOARD,
   SET_SELECTED_USER,
   UPDATE_SCORE
 } from './store/constants';
@@ -42,9 +41,6 @@ function App(props) {
 
   useEffect(() => {
     if (!connected) {
-      // if (window.innerWidth >= 500) {
-      //   userDispatch({ type: SET_SCOREBOARD });
-      // }
       userDispatch({ type: CONNECT_USER });
     }
     return () => {
@@ -79,7 +75,7 @@ function App(props) {
       userDispatch({ type: SET_CURRENT_USER, payload: data.newUser });
       props.history.push('/buzzer');
     });
-  }, [userDispatch]);
+  }, [userDispatch, props]);
 
   useEffect(() => {
     socket.on('selected user', id => {
@@ -138,17 +134,6 @@ function App(props) {
           )}
         />
       </Switch>
-      {/* {userState.scoreboard ? (
-        <Scoreboard users={userState.users} />
-      ) : userState.loggedIn ? (
-        <Buzzer
-          handleScoreUpdate={handleScoreUpdate}
-          handleSelect={handleSelect}
-          handleDeselect={handleDeselect}
-        />
-      ) : (
-        <Login handleLogin={handleLogin} />
-      )} */}
     </div>
   );
 }
